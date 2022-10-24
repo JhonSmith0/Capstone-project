@@ -1,5 +1,5 @@
 import reactLogo from "./assets/react.svg";
-import "./App.css";
+import "./App.scss";
 import CategoryItem from "./components/category-item";
 import Directory from "./components/directory";
 
