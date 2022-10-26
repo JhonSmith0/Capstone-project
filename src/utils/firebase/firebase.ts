@@ -21,13 +21,22 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
+// Providers
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt: "select_account" });
 
+// getauth
 export const auth = getAuth();
+
+// SignIN
 export const signInWithGooglePopUp = () => signInWithPopup(auth, provider);
+export const signInWithGoogleRedirect = () =>
+  signInWithRedirect(auth, provider);
+
+// db
 export const db = getFirestore();
 
+// methods
 export const createUserDocumentFromAuth = async (
   credentials: UserCredential
 ) => {
@@ -35,19 +44,21 @@ export const createUserDocumentFromAuth = async (
   const userData = await getDoc(userDocRef);
 
   const exists = userData.exists();
+
+  console.log("doc ref", userDocRef);
+  console.log("docdata ", userData);
+  console.log("exists ", exists);
   if (exists) return userDocRef;
 
-  const { displayName, email } = credentials.user;
   try {
-    console.log("Criando...");
+    const { displayName, email } = credentials.user;
+    console.log("Criando", { displayName, email });
     const userDoc = await setDoc(userDocRef, {
       email,
       displayName,
       createdAt: new Date(),
     });
-    console.log("Criado!");
   } catch (error) {
-    console.log("Erro ao criar doc!");
-    console.log(error);
+    console.error(error);
   }
 };
