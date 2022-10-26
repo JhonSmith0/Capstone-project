@@ -22,8 +22,10 @@
     justify-content: flex-end;
 
     .nav-link {
+      text-transform: uppercase;
       padding: 10px 15px;
       cursor: pointer;
+      color: inherit;
     }
   }
 }
