@@ -5,6 +5,8 @@ import {
   signInWithPopup,
   signInWithRedirect,
   UserCredential,
+  createUserWithEmailAndPassword,
+  User,
 } from "firebase/auth";
 
 import { getFirestore, getDoc, doc, setDoc } from "firebase/firestore";
@@ -38,9 +40,10 @@ export const db = getFirestore();
 
 // methods
 export const createUserDocumentFromAuth = async (
-  credentials: UserCredential
+  user: User,
+  aditionalInformation = {}
 ) => {
-  const userDocRef = doc(db, "users", credentials.user.uid);
+  const userDocRef = doc(db, "users", user.uid);
   const userData = await getDoc(userDocRef);
 
   const exists = userData.exists();
@@ -51,14 +54,24 @@ export const createUserDocumentFromAuth = async (
   if (exists) return userDocRef;
 
   try {
-    const { displayName, email } = credentials.user;
+    const { displayName, email } = user;
     console.log("Criando", { displayName, email });
     const userDoc = await setDoc(userDocRef, {
       email,
       displayName,
       createdAt: new Date(),
+      ...aditionalInformation,
     });
   } catch (error) {
     console.error(error);
   }
+};
+
+export const createAuthUserWithEmailAndPassword = async (
+  email: string,
+  password: string
+) => {
+  if (!email || !password) return;
+
+  return createUserWithEmailAndPassword(auth, email, password);
 };
