@@ -6,6 +6,10 @@ import {
   signInWithRedirect,
   UserCredential,
   createUserWithEmailAndPassword,
+<<<<<<< HEAD
+=======
+  User,
+>>>>>>> a29043baa0c759910703c563eb8b3a0fb9f7500c
 } from "firebase/auth";
 
 import { getFirestore, getDoc, doc, setDoc } from "firebase/firestore";
@@ -39,9 +43,10 @@ export const db = getFirestore();
 
 // methods
 export const createUserDocumentFromAuth = async (
-  credentials: UserCredential
+  user: User,
+  aditionalInformation = {}
 ) => {
-  const userDocRef = doc(db, "users", credentials.user.uid);
+  const userDocRef = doc(db, "users", user.uid);
   const userData = await getDoc(userDocRef);
 
   const exists = userData.exists();
@@ -52,12 +57,13 @@ export const createUserDocumentFromAuth = async (
   if (exists) return userDocRef;
 
   try {
-    const { displayName, email } = credentials.user;
+    const { displayName, email } = user;
     console.log("Criando", { displayName, email });
     const userDoc = await setDoc(userDocRef, {
       email,
       displayName,
       createdAt: new Date(),
+      ...aditionalInformation,
     });
   } catch (error) {
     console.error(error);
@@ -70,5 +76,9 @@ export const createAuthUserWithEmailAndPassword = async (
 ) => {
   if (!email || !password) return;
 
+<<<<<<< HEAD
   return await createUserWithEmailAndPassword(auth, email, password);
+=======
+  return createUserWithEmailAndPassword(auth, email, password);
+>>>>>>> a29043baa0c759910703c563eb8b3a0fb9f7500c
 };
